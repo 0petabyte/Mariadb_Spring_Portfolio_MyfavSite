@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+  
+ <mapper namespace="com.peta.mapper.ReplyMapper">
+<select id="list" resultType="com.peta.domain.ReplyVO">
+	select * from code_reply where touser = #{touser} order by rno desc 	
+</select>
+
+<select id="sessionList" resultType="com.peta.domain.ReplyVO">
+	select * from code_reply where replyer = #{username} order by rno desc 	
+</select>
+
+<insert id="create">
+	insert into code_reply (replytext, replyer,touser) values (#{replytext},#{replyer},#{touser})
+</insert>
+ 	
+<update id="update">
+ 	update code_reply set replytext = #{replytext},replyer = #{replyer}, updatedate= now() where rno=#{rno}
+</update>
+ 	
+<delete id="delete">
+ 	delete from code_reply where rno = #{rno}
+</delete>
+ 
+ <select id="listPage" resultType="ReplyVO">
+ select * from code_reply where touser = #{touser} order by rno desc limit #{cri.pageStart},#{cri.perPageNum}
+ </select>
+ 
+ <select id="count" resultType="int">
+ select count(rno) from code_reply where touser = #{touser}
+ </select>
+ 
+  <select id="sessionListPage" resultType="ReplyVO">
+ select * from code_reply where replyer = #{username} order by rno desc limit #{cri.pageStart},#{cri.perPageNum}
+ </select>
+ 
+ <select id="sessionCount" resultType="int">
+ select count(rno) from code_reply where replyer = #{username}
+ </select>
+ 
+
+ 
+ </mapper>

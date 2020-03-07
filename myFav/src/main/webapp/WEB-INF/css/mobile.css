@@ -1,0 +1,51 @@
+@charset "UTF-8";
+
+.btnMenuTest {
+	width: 50px;
+	height: 50px;
+	position: absolute;
+	left: 0px;
+	top: 0px;
+	z-index: 1;
+	background-image:
+		url("https://s1.daumcdn.net/cfs.tistory/custom/blog/204/2048858/skin/images/menu.png");
+	background-size: 50%;
+	background-repeat: no-repeat;
+	background-position: center;
+	cursor: pointer;
+}
+
+.close {
+	width: 50px;
+	height: 50px;
+	position: absolute;
+	left: 0px;
+	top: 0px;
+	z-index: 1;
+	background-image:
+		url("https://s1.daumcdn.net/cfs.tistory/custom/blog/204/2048858/skin/images/close.png");
+	background-size: 50%;
+	background-repeat: no-repeat;
+	background-position: center;
+	cursor: pointer;
+}
+
+#mobileMenu {
+	width: 200px;
+	height: 100%;
+	position: fixed;
+	top: 0px;
+	left: -202px;
+	z-index: 10;
+	border: 1px solid #c9c9c9;
+	background-color: white;
+	
+	transition: All 0.2s ease;
+	-webkit-transition: All 0.2s ease;
+	-moz-transition: All 0.2s ease;
+	-o-transition: All 0.2s ease;
+}
+
+#mobileMenu.open {
+	left: 0px;
+}

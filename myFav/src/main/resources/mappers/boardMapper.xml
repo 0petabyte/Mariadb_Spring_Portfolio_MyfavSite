@@ -1,0 +1,229 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+  
+ <mapper namespace="com.peta.mapper.BoardMapper">
+ 
+ <select id="grouplist" resultType="com.peta.domain.GroupVO">
+ <![CDATA[
+select name,groupnum from fav_group where userid = #{userid} order by groupnum asc;
+ ]]>
+ </select>
+ 
+ <insert id="groupCreate">
+ 	insert into fav_group (name,userid) value (#{name},#{userid})
+ </insert>
+ 
+ <select id="urlList" resultType="com.peta.domain.UrlVO">
+ select favnum,url,memo,userid,groupnum,nowdate from fav_list  
+ <if test="groupnum != 0">
+ where groupnum = #{groupnum}
+ </if>
+  
+ <if test="searchType != null">
+ 	<if test="searchType == 'u'.toString()">
+ 		and url like CONCAT('%', #{keyword}, '%')
+ 	</if>
+ 	<if test="searchType == 'm'.toString()">
+ 		and memo like CONCAT('%', #{keyword}, '%')
+ 	</if>
+ 	<if test="searchType == 'um'.toString()">
+ 		and (url like CONCAT('%', #{keyword}, '%') OR memo like CONCAT('%', #{keyword}, '%')) 
+ 	</if>
+ </if>
+ order by favnum desc 
+
+ </select>
+ 
+ <delete id="groupDel">
+ delete from fav_group where groupnum = #{groupnum}
+ </delete>
+ 
+ <insert id="urlInsert">
+ insert into fav_list(url,memo,userid,groupnum) value (#{url},#{memo},#{userid},#{groupnum})
+ </insert>
+ 
+ <delete id="urlDelete">
+ delete from fav_list where favnum = #{favnum}
+ </delete>
+ 
+ <select id="groupCount" resultType="int">
+ select count(*) from fav_list where groupnum =#{groupnum}
+ </select>
+ 
+ <select id="lastGroup" resultType="int">
+ select groupnum from fav_group where name=#{name}
+ </select>
+ 
+ <select id="groupName" resultType="String">
+ select name from fav_group where groupnum = #{groupnum}
+ </select>
+ 
+  <select id="groupNumber" resultType="int">
+ select groupnum from fav_list where favnum = #{favnum}
+ </select>
+ 
+ <select id="favRead" resultType="com.peta.domain.UrlVO">
+ select favnum,url,memo,userid,groupnum,nowdate from fav_list where favnum = #{favnum}
+</select>
+ 
+ <select id="urlListAll" resultType="com.peta.domain.UrlVO">
+  <![CDATA[
+  select favnum,url,memo,userid,groupnum,nowdate from fav_list where userid = #{userid} order by favnum desc
+ ]]>
+ </select>
+ 
+ <select id="favnumGroupName" resultType="String">
+ select name from fav_group where groupnum = (select groupnum from fav_list where favnum = #{favnum})
+ </select>
+ 
+<update id="favUpdate" >
+update fav_list set url=#{url}, memo =#{memo}, groupnum =#{groupnum} where favnum=#{favnum}
+</update>
+ 
+ <select id="listPage" resultType="com.peta.domain.UrlVO">
+
+ select favnum,url,memo,userid,groupnum,nowdate from fav_list where userid = 'testid' 
+ 
+ <if test="groupnum != 0">
+ AND groupnum = #{groupnum}
+ </if>
+ 
+ order by favnum desc limit #{page},10
+
+ </select>
+
+
+ <select id="listCriteria" resultType="com.peta.domain.UrlVO">
+<![CDATA[
+ select favnum,url,memo,userid,groupnum,nowdate from fav_list where favnum > 0 and userid = #{userid}
+ ]]>
+ <if test="groupnum != 0">
+ and groupnum = #{groupnum}
+ </if>
+  
+ <if test="searchType != null">
+ 	<if test="searchType == 'u'.toString()">
+ 		and url like CONCAT('%', #{keyword}, '%')
+ 	</if>
+ 	<if test="searchType == 'm'.toString()">
+ 		and memo like CONCAT('%', #{keyword}, '%')
+ 	</if>
+ 	<if test="searchType == 'um'.toString()">
+ 		and (url like CONCAT('%', #{keyword}, '%') OR memo like CONCAT('%', #{keyword}, '%')) 
+ 	</if>
+ </if>
+ order by favnum desc 
+ limit #{pageStart},#{perPageNum}
+ </select>
+ 
+
+ 
+ <select id="countPaging" resultType="int">
+ <![CDATA[
+ select count(favnum) from fav_list where favnum > 0 and userid = #{userid}
+ ]]>
+ <if test="groupnum != 0">
+ AND groupnum = #{groupnum}
+ </if>
+  <if test="searchType != null">
+ 	<if test="searchType == 'u'.toString()">
+ 		and url like CONCAT('%', #{keyword}, '%')
+ 	</if>
+ 	<if test="searchType == 'm'.toString()">
+ 		and memo like CONCAT('%', #{keyword}, '%')
+ 	</if>
+ 	<if test="searchType == 'um'.toString()">
+ 		and (url like CONCAT('%', #{keyword}, '%') OR memo like CONCAT('%', #{keyword}, '%')) 
+ 	</if>
+ </if>
+ </select>
+
+ 
+
+ 
+<!--   	<insert id="create">
+  	insert into tb1_board (title,content,writer) value (#{title},#{content},#{writer})
+  	</insert>
+  
+  	<select id="read" resultType="com.peta.domain.BoardVO">
+  	select bno,title,content,writer,regdate,viewcnt from tb1_board where bno=#{bno}
+  	</select>
+  	
+  	<update id="update">
+  	update tb1_board set title=#{title}, content =#{content} where bno=#{bno}
+  	</update>
+  
+  	<delete id="delete">
+  	delete from tb1_board where bno=#{bno}
+  	</delete>
+  
+  	<select id="listAll" resultType="com.peta.domain.BoardVO">
+  	<![CDATA[
+  	select bno,title,content,writer,regdate,viewcnt from tb1_board where bno > 0 order by bno desc, regdate desc
+  	]]>
+  	</select>
+  	
+  	<select id="listPage" resultType="BoardVO">
+  	<![CDATA[
+  	select bno, title, content, writer, regdate, viewcnt from tb1_board where bno > 0 
+  	order by bno desc, regdate desc limit #{page},10
+  	]]>
+  	</select>
+  	
+  	<select id="listCriteria" resultType="BoardVO">
+  		<![CDATA[
+  		select bno, title, content, writer, regdate, viewcnt from tb1_board where bno > 0 
+  		order by bno desc, regdate desc limit #{pageStart}, #{perPageNum}
+  		]]>
+  	</select>
+  	
+  	<select id="countPaging" resultType="int">
+  		<![CDATA[
+  		select count(bno) from tb1_board where bno > 0
+  		]]>
+  	</select>
+	<sql id="search">
+  		<if test ="searchType !=null">
+  			<if test="searchType = 't'.toString()">
+  				and title like CONCAT('%',#{keyword},'%')
+  			</if>
+  			<if test="searchType = 'c'.toString()">
+  				and content like CONCAT('%',#{keyword},'%')
+  			</if>
+  			<if test="searchType = 'w'.toString()">
+  				and writer like CONCAT('%',#{keyword},'%')
+  			</if>
+  			<if test="searchType = 'tc'.toString()">
+  				and (title like CONCAT('%',#{keyword},'%') OR content like CONCAT('%',#{keyword},'%'))
+  			</if>
+  			<if test="searchType = 'cw'.toString()">
+  				and (content like CONCAT('%',#{keyword},'%') OR writer like CONCAT('%',#{keyword},'%'))
+  			</if>
+  			<if test="searchType = 'tcw'.toString()">
+  				and (title like CONCAT('%',#{keyword},'%') OR content like CONCAT('%',#{keyword},'%')
+  				OR writer like CONCAT('%',#{keyword},'%'))
+  			</if>
+  		</if>
+	</sql>
+  		
+  	<select id="listSearch" resultType="BoardVO">
+  		<![CDATA[
+  		select * from tb1_board where bno > 0 
+  		]]>
+		<include refid="search"></include>
+  		<![CDATA[
+  		order by bno desc limit #{pageStart}, #{perPageNum}
+  		]]>
+  		
+  	</select>
+  	
+  	<select id="listSearchCount" resultType="int">
+  	<![CDATA[
+  	select count(bno) from tb1_board where bno > 0
+  	]]>
+  	<include refid="search"></include>
+  	</select> -->
+ </mapper>
