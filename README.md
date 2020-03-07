@@ -16,3 +16,8 @@
 메인페이지
 
 <img src="https://user-images.githubusercontent.com/41144436/76138187-bc592900-6088-11ea-9edb-54c6b33b0b80.jpg"></img>
+
+
+방명록
+
+<img src="https://user-images.githubusercontent.com/41144436/76138176-8ae05d80-6088-11ea-87b3-d3a89761837c.jpg"></img>
